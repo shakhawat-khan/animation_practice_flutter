@@ -53,6 +53,8 @@ class _TransformWidgetState extends State<TransformWidget>
   late AnimationController _controller;
   late Animation<double> animation;
 
+  int _counter = 0;
+
   @override
   void initState() {
     _controller = AnimationController(
@@ -64,6 +66,7 @@ class _TransformWidgetState extends State<TransformWidget>
         CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn)
           ..addListener(() {
             setState(() {
+              _counter++;
               debugPrint('${animation.value}');
             });
           });
@@ -84,14 +87,23 @@ class _TransformWidgetState extends State<TransformWidget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('hello'),
-        ),
-        body: Center(
-          child: Text(
-            'hello satan',
-            style: TextStyle(fontSize: 30.0 * animation.value),
+      appBar: AppBar(
+        title: Text('hello'),
+      ),
+      body: Center(
+          child: GestureDetector(
+        child: Text(
+          _controller.isAnimating
+              ? (_counter).toStringAsFixed(2)
+              : 'Lets Begin',
+          style: TextStyle(
+            fontSize: 24.0 * _controller.value + 16.0,
           ),
-        ));
+        ),
+        onTap: () {
+          _controller.forward(from: 0.0);
+        },
+      )),
+    );
   }
 }
