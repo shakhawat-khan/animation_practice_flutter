@@ -45,36 +45,52 @@ class TransformWidget extends StatefulWidget {
   State<TransformWidget> createState() => _TransformWidgetState();
 }
 
-class _TransformWidgetState extends State<TransformWidget> {
+class _TransformWidgetState extends State<TransformWidget>
+    with SingleTickerProviderStateMixin {
   double _scale = 1.0;
   double test = 90;
+  double _size = 100.0;
+  late AnimationController _controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 10800),
+      vsync: this,
+    );
+
+    animation =
+        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn)
+          ..addListener(() {
+            setState(() {
+              debugPrint('${animation.value}');
+            });
+          });
+
+    _controller.forward();
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('hello'),
         ),
-        body: GestureDetector(
-          onTapDown: (TapDownDetails details) {
-            setState(() {
-              _scale = 8;
-              test = 180;
-            });
-          },
-          onTapUp: (TapUpDetails details) {
-            print(details.localPosition);
-            setState(() {
-              _scale = 1.0;
-              test = 90;
-            });
-          },
-          child: Transform.rotate(
-            angle: test,
-            child: Container(
-              width: 100.0,
-              height: 100.0,
-              color: Colors.blue,
-            ),
+        body: Center(
+          child: Text(
+            'hello satan',
+            style: TextStyle(fontSize: 30.0 * animation.value),
           ),
         ));
   }
