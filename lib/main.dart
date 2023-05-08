@@ -51,28 +51,32 @@ class _TransformWidgetState extends State<TransformWidget>
   double test = 90;
   double _size = 100.0;
   late AnimationController _controller;
-  late Animation<double> animation;
+  late Animation<Color?> animation;
 
   int _counter = 0;
 
   @override
   void initState() {
     _controller = AnimationController(
-      duration: Duration(milliseconds: 10800),
+      duration: Duration(milliseconds: 18000),
       vsync: this,
     );
 
     animation =
-        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn)
+        ColorTween(begin: Colors.red, end: Colors.green).animate(_controller)
           ..addListener(() {
             setState(() {
-              _counter++;
-              debugPrint('${animation.value}');
+              print(_controller.value);
             });
           });
-
+    // CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn)
+    //   ..addListener(() {
+    //     setState(() {
+    //       _counter++;
+    //       debugPrint('${animation.value}');
+    //     });
+    //   });
     _controller.forward();
-
     // TODO: implement initState
     super.initState();
   }
@@ -91,19 +95,7 @@ class _TransformWidgetState extends State<TransformWidget>
         title: Text('hello'),
       ),
       body: Center(
-          child: GestureDetector(
-        child: Text(
-          _controller.isAnimating
-              ? (_counter).toStringAsFixed(2)
-              : 'Lets Begin',
-          style: TextStyle(
-            fontSize: 24.0 * _controller.value + 16.0,
-          ),
-        ),
-        onTap: () {
-          _controller.forward(from: 0.0);
-        },
-      )),
+          child: Container(height: 100, width: 200, color: animation.value)),
     );
   }
 }
