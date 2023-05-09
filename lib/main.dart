@@ -58,12 +58,17 @@ class _TransformWidgetState extends State<TransformWidget>
   @override
   void initState() {
     _controller = AnimationController(
-      duration: Duration(milliseconds: 18000),
+      duration: Duration(milliseconds: 1800),
       vsync: this,
     );
 
     animation =
         ColorTween(begin: Colors.red, end: Colors.green).animate(_controller)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _controller.reverse();
+            }
+          })
           ..addListener(() {
             setState(() {
               print(_controller.value);
